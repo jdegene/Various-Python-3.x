@@ -10,6 +10,8 @@ http://stackoverflow.com/questions/20039643/how-to-scrape-a-website-that-require
 
 http://www.analyticsvidhya.com/blog/2015/10/beginner-guide-web-scraping-beautiful-soup-python/
 
+https://blog.hartleybrody.com/web-scraping/
+
 
 https://github.com/downloads/davegb3/NppTidy2/Tidy2_0.2.zip
 """
@@ -36,8 +38,8 @@ class Render(QWebPage):
     self.app.quit() 
 
 
-url = 'http://www.kicker.de/news/fussball/bundesliga/spieltag/1-bundesliga/2015-16/spieltag.html'
-
+#url = 'http://www.kicker.de/news/fussball/bundesliga/spieltag/1-bundesliga/2015-16/spieltag.html'
+url = 'http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/'
 #This does the magic.Loads everything
 r = Render(url) 
 
