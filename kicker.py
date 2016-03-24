@@ -5,6 +5,13 @@ Created on Thu Mar 24 09:26:43 2016
 @author: jdegene
 
 https://impythonist.wordpress.com/2015/01/06/ultimate-guide-for-scraping-javascript-rendered-web-pages/
+
+http://stackoverflow.com/questions/20039643/how-to-scrape-a-website-that-requires-login-first-with-python
+
+http://www.analyticsvidhya.com/blog/2015/10/beginner-guide-web-scraping-beautiful-soup-python/
+
+
+https://github.com/downloads/davegb3/NppTidy2/Tidy2_0.2.zip
 """
 
 import requests
