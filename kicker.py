@@ -4,7 +4,6 @@ Created on Thu Mar 24 09:26:43 2016
 
 @author: jdegene
 
-https://impythonist.wordpress.com/2015/01/06/ultimate-guide-for-scraping-javascript-rendered-web-pages/
 
 http://stackoverflow.com/questions/20039643/how-to-scrape-a-website-that-requires-login-first-with-python
 
@@ -16,35 +15,33 @@ https://blog.hartleybrody.com/web-scraping/
 https://github.com/downloads/davegb3/NppTidy2/Tidy2_0.2.zip
 """
 
-import requests
-
+import requests, datetime, subprocess
 import sys  
-from PyQt4.QtGui import *  
-from PyQt4.QtCore import *  
-from PyQt4.QtWebKit import *  
 from lxml import html 
 
 
-class Render(QWebPage):  
-  def __init__(self, url):  
-    self.app = QApplication(sys.argv)  
-    QWebPage.__init__(self)  
-    self.loadFinished.connect(self._loadFinished)  
-    self.mainFrame().load(QUrl(url))  
-    self.app.exec_()  
-  
-  def _loadFinished(self, result):  
-    self.frame = self.mainFrame()  
-    self.app.quit() 
+# Define the Python exe path and the script for the subprocess
+python_path = "C:/Anaconda3/Pythonw.exe"
+python_script = "D:/Python/Git/Various-Python-3.x/kicker_child.py"
 
 
-#url = 'http://www.kicker.de/news/fussball/bundesliga/spieltag/1-bundesliga/2015-16/spieltag.html'
-url = 'http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/'
-#This does the magic.Loads everything
-r = Render(url) 
+url = 'http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/31/rankinglist/0/spieltag/27'
 
-#result is a QString.
-result = r.frame.toHtml()
+# run the actual subprocess
+p = subprocess.check_output([python_path, python_script, url])
+
+# Return from subprocess is in bytecode, must be converted first. 'windows-1252' is obviously
+# for windows systems, try UTF-8 if not working (or OS related)
+q = p.decode('windows-1252')
+
+
+# Write result to a file with timestamp in name (for testing purposes)
+nowTime = str(datetime.datetime.now().time().hour) + "_" + str(datetime.datetime.now().time().minute)
+txtFile = 'D:/Test/kicker/rndrd_' + nowTime + '.txt'
+w = open(txtFile, 'w')
+w.write(q)
+w.close()
+
 
 
 
