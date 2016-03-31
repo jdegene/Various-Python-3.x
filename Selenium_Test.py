@@ -59,9 +59,13 @@ for Spieltag in range(1,28):
             w = open(txtFile, 'w')
             w.write(BLrankHTLM)
             w.close()
-            
-        except:
+                
+        except AssertionError:
             break
+        
+        except:
+            continue
+            print("different exception")
 
 
   
@@ -86,9 +90,13 @@ for Spieltag in range(1,28):
             w = open(txtFile, 'w')
             w.write(BLrankHTLM)
             w.close()
-            
+        
+        except AssertionError:
+            break
+        
         except:
-            break   
+            continue
+            print("different exception")
 
 
 driver.close()
