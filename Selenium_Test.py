@@ -3,6 +3,7 @@
 
 #from bs4 import BeautifulSoup
 
+import os, shutil
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -16,7 +17,6 @@ from selenium.webdriver.common.keys import Keys
 #from selenium.common.exceptions import NoAlertPresentException
 
 loginURL = "http://www.kicker.de/games/interactive/startseite/gamesstartseite.html"
-BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/1/rankinglist/0/spieltag/27"
 
 # Username and PW read from separate file (first and second line)
 uName = open('D:\Python\Info.txt', "r").readlines()[0].rstrip('\n')
@@ -38,9 +38,9 @@ login_name_form.send_keys(uName)
 login_pw_form.send_keys(uPass)
 LOS_Button.send_keys(Keys.ENTER)
 
-
-for Spieltag in range(1,3):
-    for counter in range(1,61,60):
+# 1. Bundesliga
+for Spieltag in range(1,28):
+    for counter in range(1,200000,30):
     
         try:        
             BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
@@ -55,15 +55,44 @@ for Spieltag in range(1,3):
             # if it appears, no more data is available, exception is raised and loop left
             assert "Keine Daten vorhanden" not in BLrankHTLM        
         
-            txtFile = 'D:/Test/kicker/BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
+            txtFile = 'D:/Test/kicker/1BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
             w = open(txtFile, 'w')
             w.write(BLrankHTLM)
             w.close()
             
         except:
             break
-        
+
+
+  
+# 2. Bundesliga      
+for Spieltag in range(1,28):
+    for counter in range(1,200000,30):
     
+        try:        
+            BLrankURL = "http://manager.kicker.de/interactive/2bundesliga/meinteam/ranking/suchelfdnr/" \
+            + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
+            
+            # open URL that contains ranking points BL1
+            driver.get(BLrankURL)        
+            
+            BLrankHTLM = driver.page_source
+            
+            # As long as "Keine Daten vorhanden" is absent, it continues
+            # if it appears, no more data is available, exception is raised and loop left
+            assert "Keine Daten vorhanden" not in BLrankHTLM        
+        
+            txtFile = 'D:/Test/kicker/2BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
+            w = open(txtFile, 'w')
+            w.write(BLrankHTLM)
+            w.close()
+            
+        except:
+            break   
 
 
 driver.close()
+
+for files in os.listdir('D:/Test/kicker/'):
+    shutil.copyfile('D:/Test/kicker/'+ files, 'P:/Kicker/' + files)
+    
