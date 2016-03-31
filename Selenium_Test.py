@@ -1,6 +1,9 @@
 
 #http://stackoverflow.com/questions/20039643/how-to-scrape-a-website-that-requires-login-first-with-python
 
+#from bs4 import BeautifulSoup
+
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.common.by import By
@@ -12,15 +15,17 @@ from selenium.webdriver.common.keys import Keys
 #from selenium.common.exceptions import NoSuchElementException
 #from selenium.common.exceptions import NoAlertPresentException
 
-url = "http://www.kicker.de/games/interactive/startseite/gamesstartseite.html"
+loginURL = "http://www.kicker.de/games/interactive/startseite/gamesstartseite.html"
+BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/1/rankinglist/0/spieltag/27"
 
-uName = "Edwor1987@fleckens.hu"
-uPass = "123456!"
+# Username and PW read from separate file (first and second line)
+uName = open('D:\Python\Info.txt', "r").readlines()[0].rstrip('\n')
+uPass = open('D:\Python\Info.txt', "r").readlines()[1].rstrip('\n')
 
 #driver = webdriver.Firefox()
 driver = webdriver.Chrome()
 
-driver.get(url)
+driver.get(loginURL)
 
 # Get the Username and Password fields by their ID
 login_name_form = driver.find_element_by_id('nicknameLoginBox')
@@ -34,4 +39,31 @@ login_pw_form.send_keys(uPass)
 LOS_Button.send_keys(Keys.ENTER)
 
 
-#driver.close()
+for Spieltag in range(1,3):
+    for counter in range(1,61,60):
+    
+        try:        
+            BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
+            + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
+            
+            # open URL that contains ranking points BL1
+            driver.get(BLrankURL)        
+            
+            BLrankHTLM = driver.page_source
+            
+            # As long as "Keine Daten vorhanden" is absent, it continues
+            # if it appears, no more data is available, exception is raised and loop left
+            assert "Keine Daten vorhanden" not in BLrankHTLM        
+        
+            txtFile = 'D:/Test/kicker/BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
+            w = open(txtFile, 'w')
+            w.write(BLrankHTLM)
+            w.close()
+            
+        except:
+            break
+        
+    
+
+
+driver.close()
