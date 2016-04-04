@@ -54,32 +54,35 @@ while not successful:
             # Check if output file already exists and is >0 kb
             outFol = 'D:/Test/kicker/'
             outFile = outFol + '1BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
+            
             if os.path.isfile(outFile) and os.path.getsize(outFile) > 0:
                 break
-        
-            try:        
-                BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
-                + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
-                
-                # open URL that contains ranking points BL1
-                driver.get(BLrankURL)        
-                
-                BLrankHTLM = driver.page_source
-                
-                # As long as "Keine Daten vorhanden" is absent, it continues
-                # if it appears, no more data is available, exception is raised and loop left
-                assert "Keine Daten vorhanden" not in BLrankHTLM        
             
-                w = open(outFile, 'w')
-                w.write(BLrankHTLM)
-                w.close()
+            else:
+            
+                try:        
+                    BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
+                    + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
                     
-            except AssertionError:
-                break
-            
-            except:
-                print(sys.exc_info()[0])
-                continue
+                    # open URL that contains ranking points BL1
+                    driver.get(BLrankURL)        
+                    
+                    BLrankHTLM = driver.page_source
+                    
+                    # As long as "Keine Daten vorhanden" is absent, it continues
+                    # if it appears, no more data is available, exception is raised and loop left
+                    assert "Keine Daten vorhanden" not in BLrankHTLM        
+                
+                    w = open(outFile, 'w')
+                    w.write(BLrankHTLM)
+                    w.close()
+                        
+                except AssertionError:
+                    break
+                
+                except:
+                    print(sys.exc_info()[0])
+                    continue
     
     # Test if all file sizes are >0, if not iteration starts again
     for outFiles in os.listdir(outFol):
