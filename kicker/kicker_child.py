@@ -16,6 +16,8 @@ from PyQt4.QtWebKit import *
 
 
 
+
+
 class Render(QWebPage):  
   def __init__(self, url):  
     self.app = QApplication(sys.argv)  

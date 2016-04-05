@@ -40,7 +40,6 @@ login_pw_form.send_keys(uPass)
 LOS_Button.send_keys(Keys.ENTER)
 
 
-
 # 1. Bundesliga
 
 # Process is run, until all files are in size > 0
@@ -56,7 +55,7 @@ while not successful:
             outFile = outFol + '1BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
             
             if os.path.isfile(outFile) and os.path.getsize(outFile) > 0:
-                break
+                continue
             
             else:
             
