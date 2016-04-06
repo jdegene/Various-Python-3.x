@@ -36,59 +36,47 @@ login_pw_form.send_keys(uPass)
 LOS_Button.send_keys(Keys.ENTER)
 
 
-# 1. Bundesliga
-
-# Process is run, until all files are in size > 0
-# File Size 0 sometimes happens due to locked file in Temp [WinError 32]
-successful = False
-while not successful: 
-    
-    for Spieltag in range(1,29):
-        for counter in range(1,2000000,30):
-           
-            # Check if output file already exists and is >0 kb
-            outFol = 'D:/Test/kicker/'
-            outFile = outFol + '1BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
-            
-            if os.path.isfile(outFile) and os.path.getsize(outFile) > 0:
-                continue
-            
-            else:
-                try:  
-                    # switch URL between ...ive/bundesliga/mein... and ...ive/2bundesliga/mein... for resp. league
-                    BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
-                    + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
-                    
-                    # open URL that contains ranking points BL1
-                    driver.get(BLrankURL)        
-                    
-                    BLrankHTLM = driver.page_source
-                    
-                    # As long as "Keine Daten vorhanden" is absent, it continues
-                    # if it appears, no more data is available, exception is raised and loop left
-                    assert "Keine Daten vorhanden" not in BLrankHTLM        
-                    
-                    # write the file as utf-8, as special characters will lead to errors 
-                    with open(outFile,'w',encoding='utf8') as f:
-                        f.write(BLrankHTLM)
-                    
-                    #w = open(outFile, 'w')
-                    #w.write(BLrankHTLM)
-                    #w.close()
-                        
-                except AssertionError:
-                    break
-                
-                except:
-                    print(sys.exc_info()[0])
-                    continue
-    
-    # Test if all file sizes are >0, if not iteration starts again
-    for outFiles in os.listdir(outFol):
-        if os.path.getsize(outFol + outFiles) < 1:
-            break
+# 1. Bundesliga    
+for Spieltag in range(1,29):
+    for counter in range(1,2000000,30):
+       
+        # Check if output file already exists and is >0 kb
+        outFol = 'D:/Test/kicker/'
+        outFile = outFol + '1BL_' + str(Spieltag) + "_" + str(counter) + '.txt'
+        
+        if os.path.isfile(outFile) and os.path.getsize(outFile) > 0:
+            continue
+        
         else:
-            successful = True
+            try:  
+                # switch URL between ...ive/bundesliga/mein... and ...ive/2bundesliga/mein... for resp. league
+                BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
+                + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
+                
+                # open URL that contains ranking points BL1
+                driver.get(BLrankURL)        
+                
+                BLrankHTLM = driver.page_source
+                
+                # As long as "Keine Daten vorhanden" is absent, it continues
+                # if it appears, no more data is available, exception is raised and loop left
+                assert "Keine Daten vorhanden" not in BLrankHTLM        
+                
+                # write the file as utf-8, as special characters will lead to errors 
+                with open(outFile,'w',encoding='utf8') as f:
+                    f.write(BLrankHTLM)
+                
+                #w = open(outFile, 'w')
+                #w.write(BLrankHTLM)
+                #w.close()
+                    
+            except AssertionError:
+                break
+            
+            except:
+                print(sys.exc_info()[0])
+                continue
+
 
 
   
