@@ -7,14 +7,10 @@ import os, sys
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.common.by import By
 
-#from selenium.webdriver.support.ui import Select
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.common.exceptions import TimeoutException
-#from selenium.webdriver.support import expected_conditions as EC
-#from selenium.common.exceptions import NoSuchElementException
-#from selenium.common.exceptions import NoAlertPresentException
+
+
+
 
 loginURL = "http://www.kicker.de/games/interactive/startseite/gamesstartseite.html"
 
@@ -47,8 +43,8 @@ LOS_Button.send_keys(Keys.ENTER)
 successful = False
 while not successful: 
     
-    for Spieltag in range(1,28):
-        for counter in range(1,200000,30):
+    for Spieltag in range(1,29):
+        for counter in range(1,2000000,30):
            
             # Check if output file already exists and is >0 kb
             outFol = 'D:/Test/kicker/'
@@ -58,8 +54,8 @@ while not successful:
                 continue
             
             else:
-            
-                try:        
+                try:  
+                    # switch URL between ...ive/bundesliga/mein... and ...ive/2bundesliga/mein... for resp. league
                     BLrankURL = "http://manager.kicker.de/interactive/bundesliga/meinteam/ranking/suchelfdnr/" \
                     + str(counter) + "/rankinglist/0/spieltag/" + str(Spieltag)
                     
@@ -71,10 +67,14 @@ while not successful:
                     # As long as "Keine Daten vorhanden" is absent, it continues
                     # if it appears, no more data is available, exception is raised and loop left
                     assert "Keine Daten vorhanden" not in BLrankHTLM        
-                
-                    w = open(outFile, 'w')
-                    w.write(BLrankHTLM)
-                    w.close()
+                    
+                    # write the file as utf-8, as special characters will lead to errors 
+                    with open(outFile,'w',encoding='utf8') as f:
+                        f.write(BLrankHTLM)
+                    
+                    #w = open(outFile, 'w')
+                    #w.write(BLrankHTLM)
+                    #w.close()
                         
                 except AssertionError:
                     break
@@ -85,7 +85,7 @@ while not successful:
     
     # Test if all file sizes are >0, if not iteration starts again
     for outFiles in os.listdir(outFol):
-        if os.path.getsize(outFiles + outFol) < 1:
+        if os.path.getsize(outFol + outFiles) < 1:
             break
         else:
             successful = True
