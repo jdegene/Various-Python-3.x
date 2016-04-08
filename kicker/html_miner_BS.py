@@ -6,6 +6,20 @@
 from bs4 import BeautifulSoup
 import sqlite3
 
+#DB creation
+
+# connect to SQLite3 DB
+conDB = sqlite3.connect('D:/Test/kicker_db/test1.db')
+
+# conncect cursor to DB
+c = conDB.cursor()
+
+# create table to store Manager ID (as primary key) and Manager Name as Text
+c.executescript("""CREATE TABLE Manager(Manager_ID INTEGER PRIMARY KEY, Manager_Name TEXT);""")
+
+
+
+# DB filling
 gameDay = 10
 
 myFile = 'D:/Test/kicker3/1BL_' + str(gameDay) +'_511.txt'
@@ -38,5 +52,3 @@ for tr_elem in entry("tr"):
         
         print(kickerID, kickerName,  kickerPoints)
         
-# connect to SQLite3 DB
-conDB = sqlite3.connect('D:/Test/kicker_db/test1.db')
