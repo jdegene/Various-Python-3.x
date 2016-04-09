@@ -6,12 +6,16 @@
 from bs4 import BeautifulSoup
 import os, sqlite3
 
-# Folder containing scrpaed html files
-inFol = 'D:/Test/kicker/'
-
 # define used season (starting year), used for naming within database
 season = '2015'
 league = '1'
+
+
+# Folder containing scrpaed html files
+inFol = 'D:/Test/kicker/'
+
+
+
 
 
 
@@ -44,8 +48,8 @@ except:
 
 for extFile in os.listdir(inFol):
     
-    # skip file if not a txt file
-    if extFile[-3:] != 'txt':
+    # skip file if not a txt file, or has size 0
+    if extFile[-3:] != 'txt'  or  os.path.getsize(inFol+extFile) < 1:
         continue
 
     #myFile = 'D:/Test/kicker/1BL_' + str(gameDay) +'_511.txt'  
@@ -54,7 +58,6 @@ for extFile in os.listdir(inFol):
     gameDay =  extFile[extFile.find("_")+1:extFile.rfind("_")]
     
     myFile = inFol + extFile
-    print(myFile)
     htmlData = open(myFile,'r').read()
     
     # Define Parent element, use lxml parser
@@ -85,15 +88,14 @@ for extFile in os.listdir(inFol):
             print(kickerID, kickerName,  kickerPoints)
             
             # write Manager IDs and Names in table, ignore if already exists
-            c.execute('INSERT OR IGNORE INTO Manager VALUES (?,?)', (int(kickerID),kickerName))
-            
+            c.execute('INSERT OR IGNORE INTO Manager VALUES (?,?)', (int(kickerID),kickerName))            
             
             # write Manager's ID in pointTblName if not yet exists
             c.execute('INSERT OR IGNORE INTO ' + pointTblName + '(Manager_ID) VALUES (?)', (kickerID,))
             
-            tblName = 'GD' + gameDay
+            colName = 'GD' + gameDay
             # write Manager's point of respective GameDay in pointTblName
-            c.execute('INSERT OR IGNORE INTO ' + pointTblName + ' (' + tblName + ') VALUES (?)', (kickerPoints,))
+            c.execute('UPDATE ' + pointTblName + ' SET ' + colName + '=? WHERE Manager_ID = ?', (kickerPoints, kickerID))
   
       
 conDB.commit()
