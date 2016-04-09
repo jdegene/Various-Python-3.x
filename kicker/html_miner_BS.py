@@ -8,21 +8,18 @@ import os, sqlite3
 
 # define used season (starting year), used for naming within database
 season = '2015'
-league = '1'
+league = '2'
 
 
 # Folder containing scrpaed html files
-inFol = 'D:/Test/kicker/'
-
-
-
+inFol = 'D:/Test/kicker3/kicker2BL/'
 
 
 
 ### ###  DB creation  ### ### 
 
 # connect to SQLite3 DB
-conDB = sqlite3.connect('D:/Test/kicker_db/test1.sqlite')
+conDB = sqlite3.connect('D:/Test/kicker_db/kicker_main.sqlite')
 # conncect cursor to DB
 c = conDB.cursor()
 
@@ -45,6 +42,8 @@ except:
 
 
 ### ###  DB filling  ### ### 
+
+counter = 0
 
 for extFile in os.listdir(inFol):
     
@@ -85,7 +84,7 @@ for extFile in os.listdir(inFol):
         for elem in td_elem:
             kickerPoints = elem.text
             
-            print(kickerID, kickerName,  kickerPoints)
+            #print(kickerID, kickerName,  kickerPoints)
             
             # write Manager IDs and Names in table, ignore if already exists
             c.execute('INSERT OR IGNORE INTO Manager VALUES (?,?)', (int(kickerID),kickerName))            
@@ -96,6 +95,11 @@ for extFile in os.listdir(inFol):
             colName = 'GD' + gameDay
             # write Manager's point of respective GameDay in pointTblName
             c.execute('UPDATE ' + pointTblName + ' SET ' + colName + '=? WHERE Manager_ID = ?', (kickerPoints, kickerID))
+     
+    # give process updates every 10000 files     
+    if counter % 10000 == 0:
+        print(counter, " files processed")
+    counter += 1
   
       
 conDB.commit()

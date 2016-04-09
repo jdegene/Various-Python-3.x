@@ -66,9 +66,6 @@ for Spieltag in range(1,29):
                 with open(outFile,'w',encoding='utf8') as f:
                     f.write(BLrankHTLM)
                 
-                #w = open(outFile, 'w')
-                #w.write(BLrankHTLM)
-                #w.close()
                     
             except AssertionError:
                 break
